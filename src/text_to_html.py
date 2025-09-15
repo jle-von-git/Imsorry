@@ -140,11 +140,9 @@ def text_to_textnodes(text: str) -> list:
     """
 
     text_nodes = [TextNode(text, TextType.PLAIN, None)]
-    print("it time ", text_nodes)
     bold_split_nodes = split_nodes_delimiter(text_nodes, "**", TextType.BOLD)
     italic_split_nodes = split_nodes_delimiter(bold_split_nodes, "_", TextType.ITALIC)
     code_split_nodes = split_nodes_delimiter(italic_split_nodes, "`", TextType.CODE)
     image_split_nodes = split_nodes_image(code_split_nodes)
     final_split_nodes = split_nodes_link(image_split_nodes)
-    print("noice ", final_split_nodes)
     return final_split_nodes

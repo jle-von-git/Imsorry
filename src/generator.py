@@ -48,7 +48,7 @@ def extract_title(markdown):
         return header
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     """Creates a page using content from from_path, in the format of template_path, and write it to dest_path."""
 
     print(f"generate_page function: {from_path} to {dest_path} using {template_path}")
@@ -62,8 +62,11 @@ def generate_page(from_path, template_path, dest_path):
         template_file_contents_copy = template_file.read()
         
     filled_template = template_file_contents_copy.\
-        replace("{{ Title }}", title).\
-        replace("{{ Content }}", html)
+        replace("{{ Title }}"  , title).\
+        replace("{{ Content }}", html ).\
+        replace('href="/', f'href="{basepath}').\
+        replace('src="/' , f'src="{basepath}' )
+    
         
     dest_directories = dest_path.split("/")[:-1]
     current_path_in_dest = "./"
@@ -78,7 +81,7 @@ def generate_page(from_path, template_path, dest_path):
     dest_file.close()
 
 
-def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_page_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     """
     Recursive function:
 
@@ -88,7 +91,6 @@ def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
     using 'template_path' and placing them in dest_dir_path.
     """
 
-    print(f"generate_page_recursive function: {dir_path_content} to {dest_dir_path} using {template_path}")
     entries = os.listdir(dir_path_content)
 
     for entry in entries:
@@ -98,6 +100,6 @@ def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
 
         if is_markdown_file:
             dest_path_html = dest_path[:-2] + "html"
-            generate_page(entry_path, template_path, dest_path_html)
+            generate_page(entry_path, template_path, dest_path_html, basepath)
         elif os.path.isfile(entry_path) == False:
-            generate_page_recursive(entry_path, template_path, dest_path)
+            generate_page_recursive(entry_path, template_path, dest_path, basepath)
